@@ -3,7 +3,7 @@
 namespace EzSystems\HybridPlatformUi\EventSubscriber;
 
 use eZ\Publish\Core\MVC\Symfony\View\View;
-use EzSystems\HybridPlatformUi\Http\AdminRequestMatcher;
+use EzSystems\HybridPlatformUi\Http\HybridRequestMatcher;
 use EzSystems\HybridPlatformUi\View\CoreViewMainContentMapper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class CoreViewSubscriber implements EventSubscriberInterface
     /**
      * @var \Symfony\Component\HttpFoundation\RequestMatcherInterface
      */
-    private $adminRequestMatcher;
+    private $hybridRequestMatcher;
 
     /**
      * @var \EzSystems\HybridPlatformUi\Mapper\MainContentMapper
@@ -27,10 +27,10 @@ class CoreViewSubscriber implements EventSubscriberInterface
 
     public function __construct(
         CoreViewMainContentMapper $coreViewMapper,
-        AdminRequestMatcher $adminRequestMatcher
+        HybridRequestMatcher $hybridRequestMatcher
     ) {
         $this->mapper = $coreViewMapper;
-        $this->adminRequestMatcher = $adminRequestMatcher;
+        $this->hybridRequestMatcher = $hybridRequestMatcher;
     }
 
     public static function getSubscribedEvents()
@@ -40,7 +40,7 @@ class CoreViewSubscriber implements EventSubscriberInterface
 
     public function mapAdminViewToMainComponent(GetResponseForControllerResultEvent $event)
     {
-        if (!$this->adminRequestMatcher->matches($event->getRequest())) {
+        if (!$this->hybridRequestMatcher->matches($event->getRequest())) {
             return;
         }
 
